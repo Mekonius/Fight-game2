@@ -7,7 +7,14 @@ canvas.height = 768;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "black";
 
+let gameover = '<h1>Game Over</h1>' + '<button onclick="location.reload()">Restart</button>';
+
+
+
 const gravity = 0.7;
+
+let playerHealth = 100;
+let enemyHealth = 100;
 
 class Sprite {
   constructor({ position, velocity, color, offset }) {
@@ -118,6 +125,8 @@ const keys = {
   },
 };
 
+
+
 function animate() {
   window.requestAnimationFrame(animate);
   ctx.fillStyle = "black";
@@ -164,6 +173,8 @@ function animate() {
     );
   }
 
+
+
   if (
     retangularCollision({
       rect1: player,
@@ -172,7 +183,8 @@ function animate() {
     player.isAttacking
   ) {
     player.isAttacking = true;
-    console.log("player hit 💀");
+    enemyHealth -= 1;
+    console.log("player hit 💀" + playerHealth);
   }
 
   if (
@@ -183,9 +195,12 @@ function animate() {
     enemy.isAttacking
   ) {
     enemy.isAttacking = true;
-    console.log("Enemy hit 🔥");
+    playerHealth -= 1;
+    console.log("Enemy hit 🔥" + enemyHealth);
   }
+
 }
+
 
 animate();
 
