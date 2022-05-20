@@ -7,14 +7,10 @@ canvas.height = 768;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "black";
 
-let gameover = '<h1>Game Over</h1>' + '<button onclick="location.reload()">Restart</button>';
-
-
+let gameover =
+  "<h1>Game Over</h1>" + '<button onclick="location.reload()">Restart</button>';
 
 const gravity = 0.7;
-
-let playerHealth = 100;
-let enemyHealth = 100;
 
 class Sprite {
   constructor({ position, velocity, color, offset }) {
@@ -24,6 +20,7 @@ class Sprite {
     this.height = 150;
     this.color = color;
     this.lastKey;
+    this.health = 100;  
     this.isAttacking;
     this.attackBox = {
       position: {
@@ -125,7 +122,17 @@ const keys = {
   },
 };
 
+let timer = 10;
 
+function decreaseTimer() {
+  if (timer > 0) {
+    setTimeout(decreaseTimer, 1000);
+    timer--;
+    document.querySelector("#timer").innerHTML = timer;
+  }
+}
+
+decreaseTimer();
 
 function animate() {
   window.requestAnimationFrame(animate);
@@ -173,8 +180,6 @@ function animate() {
     );
   }
 
-
-
   if (
     retangularCollision({
       rect1: player,
@@ -183,8 +188,8 @@ function animate() {
     player.isAttacking
   ) {
     player.isAttacking = true;
-    enemyHealth -= 1;
-    console.log("player hit 💀" + playerHealth);
+    enemy.health -= 10;
+    console.log("player hit 💀" + player.health);
   }
 
   if (
@@ -195,12 +200,25 @@ function animate() {
     enemy.isAttacking
   ) {
     enemy.isAttacking = true;
-    playerHealth -= 1;
-    console.log("Enemy hit 🔥" + enemyHealth);
+    player.health -= 10;
+    console.log("Enemy hit 🔥" + enemy.health);
   }
 
+  // detect for game over
+    if (player.health <= 0 || enemy.health <= 0 || timer <= 0) {
+      document.querySelector('#displayText').innerHTML = gameover;
+     if (player.health ===  enemy.health) {
+        document.querySelector('#displayText').innerHTML = "Draw";
+        document.querySelector('#displayText').style.display = 'flex'
+      } else if (player.health >= enemy.health || enemy.health === 0) {
+        document.querySelector('#displayText').innerHTML = "Player 1 Win";
+        document.querySelector('#displayText').style.display = 'flex'
+      } else if (player.health <= enemy.health || player.health === 0) {
+        document.querySelector('#displayText').innerHTML = "Player 2 Win";
+        document.querySelector('#displayText').style.display = 'flex'
+      }
+    }
 }
-
 
 animate();
 
