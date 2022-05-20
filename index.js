@@ -10,7 +10,7 @@ ctx.fillStyle = "black";
 const gravity = 0.7;
 
 class Sprite {
-  constructor({ position, velocity, color }) {
+  constructor({ position, velocity, color, offset }) {
     this.position = position;
     this.velocity = velocity;
     this.width = 100;
@@ -19,7 +19,11 @@ class Sprite {
     this.lastKey;
     this.isAttacking;
     this.attackBox = {
-      position: this.position,
+      position: {
+        x: this.position.x,
+        y: this.position.y,
+      },
+      offset: offset,
       width: 150,
       height: 50,
     };
@@ -29,18 +33,23 @@ class Sprite {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
 
-    //attack box
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(
-      this.attackBox.position.x,
-      this.attackBox.position.y,
-      this.attackBox.width,
-      this.attackBox.height
-    );
+    if (this.isAttacking) {
+      //attack box
+      ctx.fillStyle = "yellow";
+      ctx.fillRect(
+        this.attackBox.position.x,
+        this.attackBox.position.y,
+        this.attackBox.width,
+        this.attackBox.height
+      );
+    }
   }
 
   update() {
     this.draw();
+    this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
+    this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
+
     this.position.y += this.velocity.y;
     this.position.x += this.velocity.x;
 
@@ -65,6 +74,10 @@ const player = new Sprite({
     x: 0,
     y: 0,
   },
+  offset: {
+    x: 0,
+    y: 0,
+  },
   color: "lightblue",
 });
 
@@ -75,6 +88,10 @@ const enemy = new Sprite({
   },
   velocity: {
     x: 0,
+    y: 0,
+  },
+  offset: {
+    x: -50,
     y: 0,
   },
   color: "violet",
@@ -136,14 +153,37 @@ function animate() {
   if (keys.ArrowUp.pressed && enemy.lastKey === "ArrowUp") {
     enemy.velocity.y += -1;
   }
-  
 
   // detect for collision
-  if(player.attackBox.position.x + player.attackBox.width >= enemy.position.x &&
-    player.attackBox.position.x <= enemy.position.x + enemy.attackBox.width &&
-    player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
-    player.attackBox.position.y <= enemy.position.y + enemy.attackBox.height && player.isAttacking) {
-    console.log("Collision detected with enemy 💥💥💥");
+  function retangularCollision({ rect1, rect2 }) {
+    return (
+      rect1.attackBox.position.x + rect1.attackBox.width >= rect2.position.x &&
+      rect1.attackBox.position.x <= rect2.position.x + rect2.attackBox.width &&
+      rect1.attackBox.position.y + rect1.attackBox.height >= rect2.position.y &&
+      rect1.attackBox.position.y <= rect2.position.y + rect2.attackBox.height
+    );
+  }
+
+  if (
+    retangularCollision({
+      rect1: player,
+      rect2: enemy,
+    }) &&
+    player.isAttacking
+  ) {
+    player.isAttacking = true;
+    console.log("player hit 💀");
+  }
+
+  if (
+    retangularCollision({
+      rect1: enemy,
+      rect2: player,
+    }) &&
+    enemy.isAttacking
+  ) {
+    enemy.isAttacking = true;
+    console.log("Enemy hit 🔥");
   }
 }
 
@@ -165,10 +205,9 @@ window.addEventListener("keydown", (event) => {
       keys.w.pressed = true;
       player.lastKey = "w";
       break;
-    case ' ':
-        player.attack();
-        break;
-
+    case " ":
+      player.attack();
+      break;
 
     // Enemy keys
     case "ArrowRight":
@@ -182,6 +221,9 @@ window.addEventListener("keydown", (event) => {
     case "ArrowUp":
       keys.ArrowUp.pressed = true;
       enemy.lastKey = "ArrowUp";
+      break;
+    case "ArrowDown":
+      enemy.attack();
       break;
   }
 });
@@ -199,8 +241,8 @@ window.addEventListener("keyup", (event) => {
     case "w":
       keys.w.pressed = false;
       break;
-    case ' ':
-        player.isAttacking = false;
+    case " ":
+      player.isAttacking = false;
 
     // Enemy keys
 
@@ -212,6 +254,9 @@ window.addEventListener("keyup", (event) => {
       break;
     case "ArrowUp":
       keys.ArrowUp.pressed = false;
+      break;
+    case "ArrowDown":
+      enemy.isAttacking = false;
       break;
   }
 });
