@@ -66,6 +66,9 @@ class Sprite {
 
   attack() {
     this.isAttacking = true;
+    setTimeout(() => {
+      this.isAttacking = false;
+    }, 100);
   }
 }
 
@@ -189,6 +192,7 @@ function animate() {
   ) {
     player.isAttacking = true;
     enemy.health -= 10;
+    document.querySelector('#enemyHealth').style.width = enemy.health + '%';
     console.log("player hit 💀" + player.health);
   }
 
@@ -201,6 +205,7 @@ function animate() {
   ) {
     enemy.isAttacking = true;
     player.health -= 10;
+    document.querySelector('#playerHealth').style.width = enemy.health + '%';
     console.log("Enemy hit 🔥" + enemy.health);
   }
 
