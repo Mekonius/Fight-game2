@@ -70,7 +70,7 @@ function animate() {
         player.isAttacking
     ) {
         player.isAttacking = true;
-        enemy.health -= 10;
+        enemy.takeHit();
         document.querySelector("#enemyHealth").style.width = enemy.health + "%";
         console.log("player hit 💀" + player.health);
     }
@@ -83,7 +83,7 @@ function animate() {
         enemy.isAttacking
     ) {
         enemy.isAttacking = true;
-        player.health -= 10;
+        player.takeHit();
         document.querySelector("#playerHealth").style.width = player.health + "%";
         console.log("Enemy hit 🔥" + enemy.health);
     }

@@ -65,6 +65,10 @@ const player = new Fighter({
         imageSrc: "./assets/character/char_blue_atk - copy.png",
         framesMax: 6,
     },
+    death: {
+        imageSrc: "./assets/character/char_blue_death.png",
+        framesMax: 8,
+    },
 }
 });
 
@@ -103,6 +107,10 @@ const enemy = new Fighter({
         attack: {
             imageSrc: "./assets/character/char_blue_atk.png",
             framesMax: 6,
+        },
+        death: {
+            imageSrc: "./assets/character/char_blue_death.png",
+            framesMax: 8,
         },
     }
 
@@ -160,7 +168,7 @@ window.addEventListener("keydown", (event) => {
             break;
         case "ArrowLeft":
             keys.ArrowLeft.pressed = true;
-            enemy.lastKey = "ArrowLeft";
+            enemy.lastKey = "ArrowLeft";;
             break;
         case "ArrowUp":
             enemy.velocity.y = -20;
