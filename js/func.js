@@ -26,21 +26,30 @@ function animate() {
     
     //player movement
     player.velocity.x = 0;
+    player.switchSprites("idle");
 
     if (keys.a.pressed && player.lastKey === "a") {
+        player.switchSprites("run");
         player.velocity.x -= 5;
     }
 
     if (keys.d.pressed && player.lastKey === "d") {
+        player.switchSprites("run");
         player.velocity.x += 5;
     }
-
-    if (keys.w.pressed && player.lastKey === "w") {
-        player.velocity.y += -1;
+    
+    if (player.velocity.y < 0) {
+        player.switchSprites("jump");
+    } else if (player.velocity.y > 0) {
+        player.switchSprites("fall");
     }
+
 
     //enemy movement
     enemy.velocity.x = 0;
+    enemy.switchSprites("idle");
+
+    
     if (keys.ArrowLeft.pressed && enemy.lastKey === "ArrowLeft") {
         enemy.velocity.x -= 5;
     }

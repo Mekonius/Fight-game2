@@ -43,8 +43,25 @@ const player = new Fighter({
         y: 0,
     },
     color: "lightblue",
-    imageSrc: "./assets/character/char_blue_idle.png",
     scale: 2.5,
+    sprites: {
+    idle: {
+        imageSrc: "./assets/character/char_blue_idle.png",
+        framesMax: 6,
+        },
+    run: {
+        imageSrc: "./assets/character/char_blue_running.png",
+        framesMax: 8,
+    },
+    jump: {
+        imageSrc: "./assets/character/char_blue_jumping.png",
+        framesMax: 4,
+    },
+    fall: {
+        imageSrc: "./assets/character/char_blue_falling.png",
+        framesMax: 4,
+    },
+}
 });
 
 const enemy = new Fighter({
@@ -61,8 +78,13 @@ const enemy = new Fighter({
         y: 0,
     },
     color: 'blue',
-    imageSrc: "./assets/character/enemy_red_idle.png",
     scale: 2.5,
+    sprites: {
+        idle: {
+        imageSrc: "./assets/character/enemy_red_idle.png",
+        framesMax: 6,
+        },
+    }
 
 });
 
@@ -104,7 +126,7 @@ window.addEventListener("keydown", (event) => {
             player.lastKey = "a";
             break;
         case "w":
-            keys.w.pressed = true;
+            player.velocity.y = -20;
             player.lastKey = "w";
             break;
         case " ":
@@ -121,7 +143,7 @@ window.addEventListener("keydown", (event) => {
             enemy.lastKey = "ArrowLeft";
             break;
         case "ArrowUp":
-            keys.ArrowUp.pressed = true;
+            enemy.velocity.y = -20;
             enemy.lastKey = "ArrowUp";
             break;
         case "ArrowDown":

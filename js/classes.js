@@ -26,8 +26,7 @@ class Sprite {
         );
     }
 
-    update() {
-        this.draw();
+    animateFrames(){
         this.framesElapsed++;
 
         if (this.framesElapsed % this.framesHold === 0) {
@@ -38,10 +37,15 @@ class Sprite {
             }
         }
     }
+
+    update() {
+        this.draw();
+        this.animateFrames()
+    }   
 }
 
 class Fighter extends Sprite {
-    constructor({ position, velocity, color, offset, imageSrc, scale = 1, framesMax = 1 }) {
+    constructor({ position, velocity, color, offset, imageSrc, scale = 1, framesMax = 1, sprites }) {
         super({ position, imageSrc, scale, framesMax });
         this.velocity = velocity;
         this.width = 50;
@@ -62,13 +66,19 @@ class Fighter extends Sprite {
         this.framesElapsed = 0
         this.framesCurrent = 0
         this.framesHold = 10
+        this.sprites = sprites;
+
+        for (const sprite in this.sprites) {
+            sprites[sprite].image = new Image();
+            sprites[sprite].image.src = this.sprites[sprite].imageSrc;
+        }
+
+        console.log(this.sprites);
     }
 
     update() {
         this.draw();
-
-        this.image.height = 75;
-
+        this.animateFrames()
         
 
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
@@ -77,9 +87,9 @@ class Fighter extends Sprite {
         this.position.y += this.velocity.y;
         this.position.x += this.velocity.x;
 
-        if (this.position.y + this.height >= canvas.height - 292) {
+        if (this.position.y + this.height >= canvas.height - 270) {
             this.velocity.y = 0;
-            this.position.y = canvas.height - 292 - this.height;
+            this.position.y = canvas.height - 270 - this.height;
         } else {
             this.velocity.y += gravity;
         }
@@ -90,5 +100,35 @@ class Fighter extends Sprite {
         setTimeout(() => {
             this.isAttacking = false;
         }, 1000);
+    }
+
+
+    switchSprites(sprite) {
+        // if 
+        // (
+        //     this.image === this.sprites.idle.image && 
+        //     this.framesCurrent < this.sprites.idle.frameMax -1
+        // ) 
+        // return ;
+
+        switch (sprite) {
+            case "idle":
+                this.image = this.sprites.idle.image;
+                this.framesMax = this.sprites.idle.framesMax;
+                break;
+            case "run": 
+                this.image = this.sprites.run.image;
+                this.framesMax = this.sprites.run.framesMax;
+                break;
+            case "jump":
+                this.image = this.sprites.jump.image;
+                this.framesMax = this.sprites.jump.framesMax;
+                this.framesCurrent = 0;
+                break;
+            case "fall":
+                this.image = this.sprites.fall.image;
+                this.framesMax = this.sprites.fall.framesMax;
+                break;
+        }        
     }
 }
