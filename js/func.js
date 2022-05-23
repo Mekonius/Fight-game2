@@ -100,7 +100,7 @@ function determineWinner({ player, enemy }) {
             document.querySelector('#displayText').innerHTML = "Draw";
             document.querySelector('#displayText').style.display = 'flex'
         } else if (player.health >= enemy.health || enemy.health === 0) {
-            document.querySelector('#displayText').innerHTML = "Player 1 Win";
+            document.querySelector('#displayText').innerHTML = "Player 1 Win <br /> Press R to restart";
             document.querySelector('#displayText').style.display = 'flex'
         } else if (player.health <= enemy.health || player.health === 0) {
             document.querySelector('#displayText').innerHTML = "Player 2 Win";

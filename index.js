@@ -7,7 +7,7 @@ canvas.height = 768;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "black";
 
-let gameover = "<h1>Game Over</h1>" + '<button onclick="location.reload()">Restart</button>';
+let gameover = "<h1>Game Over</h1><br />" + '<button onclick="location.reload()">Restart</button>';
 
 const gravity = 0.7;
 
@@ -61,6 +61,10 @@ const player = new Fighter({
         imageSrc: "./assets/character/char_blue_falling.png",
         framesMax: 4,
     },
+    attack: {
+        imageSrc: "./assets/character/char_blue_atk - copy.png",
+        framesMax: 6,
+    },
 }
 });
 
@@ -81,8 +85,24 @@ const enemy = new Fighter({
     scale: 2.5,
     sprites: {
         idle: {
-        imageSrc: "./assets/character/enemy_red_idle.png",
-        framesMax: 6,
+            imageSrc: "./assets/character/char_blue_idle.png",
+            framesMax: 6,
+            },
+        run: {
+            imageSrc: "./assets/character/char_blue_running.png",
+            framesMax: 8,
+        },
+        jump: {
+            imageSrc: "./assets/character/char_blue_jumping.png",
+            framesMax: 4,
+        },
+        fall: {
+            imageSrc: "./assets/character/char_blue_falling.png",
+            framesMax: 4,
+        },
+        attack: {
+            imageSrc: "./assets/character/char_blue_atk.png",
+            framesMax: 6,
         },
     }
 
@@ -167,6 +187,7 @@ window.addEventListener("keyup", (event) => {
             break;
         case " ":
             player.isAttacking = false;
+            break;
 
         // Enemy keys
 
